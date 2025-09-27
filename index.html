@@ -1,5 +1,5 @@
 <!DOCTYPE html> 
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -58,16 +58,37 @@
       text-align: left;
       font-family: 'Comic Sans MS', cursive, sans-serif;
       line-height: 1.6;
+      animation: fadeIn 1.2s ease-in-out;
     }
     .notepad h3 {
       margin-top: 0;
+    }
+    .next-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 10px 20px;
+      background-color: #f06292;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .next-btn:hover {
+      background-color: #ec407a;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
 
+<!-- Pantalla de contraseña -->
 <div id="passwordScreen" class="screen password-screen active">
-  <h2>🔒 Enter password</h2>
+  <h2>🔒 Ingresa la contraseña</h2>
   <div class="input-display" id="inputDisplay">••••</div>
   <div class="keypad">
     <button class="key" onclick="enterDigit('1')">1</button>
@@ -77,14 +98,15 @@
     <button class="key" onclick="enterDigit('5')">5</button>
     <button class="key" onclick="enterDigit('6')">6</button>
     <button class="key" onclick="enterDigit('7')">7</button>
-    <button class="key" onclick="enterDigit('9')">9</button>
     <button class="key" onclick="enterDigit('8')">8</button>
+    <button class="key" onclick="enterDigit('9')">9</button>
     <div></div>
     <button class="key" onclick="enterDigit('0')">0</button>
     <div></div>
   </div>
 </div>
 
+<!-- Pantalla de la carta -->
 <div id="notepadScreen" class="screen">
   <div class="notepad">
     <h3>📅 16 julio 2025 </h3>
@@ -105,6 +127,11 @@
     <p>
       Te amo profundamente. ♡
     </p>
+
+    <!-- Botón para ir al siguiente proyecto -->
+    <button class="next-btn" onclick="window.location.href='proyecto2/index.html'">
+      ➡️ Ir al siguiente regalo
+    </button>
   </div>
 </div>
 
@@ -125,17 +152,16 @@
         document.getElementById('passwordScreen').classList.remove('active');
         document.getElementById('notepadScreen').classList.add('active');
       } else {
-        alert('Contraseña incorecta, intenta de nuevo');
-        input = '';
-        display.textContent = '••••';
+        display.textContent = "❌";
+        setTimeout(() => {
+          input = "";
+          display.textContent = "••••";
+        }, 1000);
       }
     }
   }
-
-  
 </script>
 
 </body>
-
 </html>
 
