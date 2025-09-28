@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Árbol de corazones</title>
+  <style>
+    body {
+      margin: 0;
+      background: #ffecec;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .escena {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Tronco */
+    .tronco {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 200px;
+      background: #2b8a3e;
+      border-radius: 20px;
+      animation: growTrunk 2s ease forwards;
+    }
+
+    /* Corazones-hojas */
+    .hoja {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg) scale(0);
+      opacity: 0;
+      animation: fadeIn 1s forwards, sway 3s infinite ease-in-out;
+      animation-play-state: paused; /* inicia pausado */
+    }
+
+    .hoja::before,
+    .hoja::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .hoja::before { top: -10px; left: 0; }
+    .hoja::after { top: 0; left: -10px; }
+
+    @keyframes growTrunk {
+      from { height: 0; }
+      to { height: 200px; }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: rotate(45deg) scale(1);
+      }
+    }
+
+    /* Brisa ligera */
+    @keyframes sway {
+      0%   { transform: rotate(45deg) translateX(0); }
+      50%  { transform: rotate(45deg) translateX(4px); }
+      100% { transform: rotate(45deg) translateX(0); }
+    }
+
+    /* Carta */
+    .carta {
+      display: none;
+      position: relative;
+      z-index: 5;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      max-width: 500px;
+      text-align: center;
+      animation: aparecer 2s ease;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .contador {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #d63384;
+    }
+
+    .btn-regresar {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-regresar:hover {
+      background: #e63950;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="escena" id="escena">
+    <div class="tronco"></div>
+  </div>
+
+  <div class="carta" id="carta">
+    <h2>Mi cartita para ti 💌</h2>
+    <p>
+      Amor, cada día contigo ha sido un regalo.  
+      Gracias por hacer de mi vida un lugar lleno de amor y alegría. ❤️
+    </p>
+    <div class="contador" id="contador"></div>
+    <button class="btn-regresar" onclick="window.location.href='proyecto2.html'">Regresar</button>
+  </div>
+
+  <script>
+    const escena = document.getElementById("escena");
+    const carta = document.getElementById("carta");
+
+    // Coordenadas de un corazón (posición de hojas)
+    const heartCoords = [
+      [0, -180], [40, -170], [80, -150], [110, -120],
+      [120, -80], [100, -40], [60, -10], [0, 0],
+      [-60, -10], [-100, -40], [-120, -80], [-110, -120],
+      [-80, -150], [-40, -170]
+    ];
+
+    // Colores de hojas
+    const colors = ["#ff4d6d","#ff99ac","#ffb84d","#d63384","#ff6699"];
+
+    // Crear hojas poco a poco
+    function crearHojas() {
+      heartCoords.forEach((pos, i) => {
+        setTimeout(() => {
+          const hoja = document.createElement("div");
+          hoja.classList.add("hoja");
+          hoja.style.background = colors[Math.floor(Math.random()*colors.length)];
+          hoja.style.left = `calc(50% + ${pos[0]}px)`;
+          hoja.style.bottom = `${200 + pos[1]}px`;
+          hoja.style.animationDelay = `${Math.random()}s, ${Math.random()*2}s`; // delay diferente para sway
+          hoja.style.animationPlayState = "running"; // activar animación
+          escena.appendChild(hoja);
+
+          // Mostrar carta al final
+          if (i === heartCoords.length - 1) {
+            setTimeout(() => {
+              carta.style.display = "block";
+            }, 2500);
+          }
+        }, i * 400);
+      });
+    }
+
+    setTimeout(crearHojas, 2000); // esperar a que crezca tronco
+
+    // ==== CONTADOR ====
+    const contador = document.getElementById("contador");
+    const inicio = new Date("2023-12-05T00:00:00");
+
+    function actualizarContador() {
+      const ahora = new Date();
+      const diff = ahora - inicio;
+
+      const dias = Math.floor(diff / (1000*60*60*24));
+      const horas = Math.floor((diff / (1000*60*60)) % 24);
+      const minutos = Math.floor((diff / (1000*60)) % 60);
+      const segundos = Math.floor((diff / 1000) % 60);
+
+      contador.textContent = `Mi amor hacia ti comenzó hace ${dias} días, ${horas} horas, ${minutos} minutos y ${segundos} segundos ❤️`;
+    }
+
+    setInterval(actualizarContador, 1000);
+    actualizarContador();
+  </script>
+</body>
+</html>
