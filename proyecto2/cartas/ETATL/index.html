@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestro Tiempo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffe6eb;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    .card {
+      background: #fff0f5;
+      border: 3px solid #f48fb1;
+      border-radius: 20px;
+      padding: 20px 30px;
+      margin-top: 40px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: fadeIn 2s ease-in-out;
+    }
+    .card h2 {
+      margin: 0 0 15px;
+      color: #d81b60;
+    }
+    .card p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #444;
+    }
+    .timer {
+      margin-top: 30px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #880e4f;
+      animation: fadeIn 2s ease-in-out;
+    }
+    .back-btn {
+      margin-top: 40px;
+      padding: 12px 25px;
+      font-size: 18px;
+      background: #f48fb1;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: #d81b60;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>💖 Mi Amor</h2>
+    <p>
+      Desde que llegaste a mi vida, cada día ha estado lleno de alegría y amor.  
+      He sido tan feliz a tu lado que las palabras no bastan para expresarlo.  
+      Gracias por hacerme sentir especial, por cada sonrisa y por todos los momentos  
+      que hemos compartido. Eres mi felicidad más grande. 💕
+    </p>
+  </div>
+
+  <div class="timer" id="timer"></div>
+
+  <button class="back-btn" onclick="location.href='../proyecto2.html'">⬅ Regresar</button>
+
+  <script>
+    function updateTimer() {
+      const startDate = new Date("2023-12-05T00:00:00");
+      const now = new Date();
+      const diff = now - startDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("timer").textContent = 
+        `Mi amor por ti comenzo hace ${days} días, ${hours} horas, ${minutes} minutos y ${seconds} segundos 💞`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+
+</body>
+</html>
