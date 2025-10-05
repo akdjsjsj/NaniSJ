@@ -3,56 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atrapa los corazones</title>
+  <title>Escribe mi nombre 💌</title>
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background: #ffe6eb;
+      background: linear-gradient(180deg, #ffe6eb 0%, #ffd6e0 100%);
       font-family: 'Comic Sans MS', cursive;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
     }
-    #basket {
+
+    h2 {
+      color: #d81b60;
+      margin-bottom: 30px;
+    }
+
+    .letters {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+    }
+
+    .letter {
       position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
       font-size: 40px;
-      cursor: none;
+      background: #f8bbd0;
+      color: white;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background 0.3s;
     }
-    .heart {
-      position: absolute;
-      font-size: 30px;
-      color: red;
+
+    .letter:hover {
+      background: #f48fb1;
+      transform: scale(1.1);
     }
+
+    .hidden {
+      display: none;
+    }
+
     .card {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       background: #fff0f5;
       border: 3px solid #f48fb1;
       border-radius: 20px;
-      padding: 20px;
-      max-width: 600px;
+      padding: 25px;
       text-align: center;
-      display: none;
+      max-width: 600px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       animation: fadeIn 1s ease-in-out;
+      display: none;
     }
+
+    .card h3 {
+      color: #d81b60;
+      margin-bottom: 10px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
     }
+
+    @keyframes float {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-15px); }
+    }
+
+    .heart {
+      position: absolute;
+      color: #ff80ab;
+      font-size: 20px;
+      animation: float 2s ease-in-out infinite alternate;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #f48fb1;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #d81b60;
+    }
   </style>
 </head>
 <body>
-  <h2>💖 Atrapa 10 corazones para descubrir lo que siento</h2>
-  <div id="basket">💝</div>
-  <div id="card" class="card">
-    <h2>💌 Lo que siento</h2>
+
+  <h2>💖 Toca las letras en orden para formar la palabra <b>AMOR</b></h2>
+
+  <div class="letters" id="letters"></div>
+
+  <div class="card" id="card">
+    <h3>💌 Lo que siento</h3>
     <p>
-      Cada corazón que atrapaste es una muestra de lo mucho que te amo.  
-      Estar contigo es atrapar la felicidad todos los días. Mi amor, en esta carta me gustaria 
+      Cada letra que tocaste representa una parte de lo que siento por ti...  
+      Cuando todo se une, forma la palabra más hermosa: <b>AMOR</b>.  
+      Porque eso es lo que eres para mí.Mi amor, en esta carta me gustaria 
       expresarte todo lo que siento por ti,de hecho, todas las palabras del mundo 
       se quedan cortas para expresartelo pero quiero intentarlo, lo que yo siento
        por ti es amor, admiracion, respeto orgullo, cariño, todas las cosas bonitas 
@@ -62,58 +126,71 @@
      formar parte de tu vida siemre, quiero verte logrando todas tus metas, quiero 
      estar para apoyarte siempre, y podria continuar diciendo nombrando y escribiendo
       todo lo que siento por ti, pero las palabras se 
-      me quedan cortas, TE AMOOOOO MUCHISIMO💕
+      me quedan cortas, TE AMOOOOO MUCHISIMO💕💕
     </p>
+    <button class="back-btn" onclick="location.href='../proyecto2.html'">⬅ Regresar</button>
   </div>
 
   <script>
-    const basket = document.getElementById("basket");
+    const word = "AMOR";
+    let currentIndex = 0;
+    const lettersContainer = document.getElementById("letters");
     const card = document.getElementById("card");
-    let score = 0;
 
-    document.addEventListener("mousemove", e => {
-      basket.style.left = e.clientX - 20 + "px";
-    });
+    // Generar letras aleatorias en la pantalla
+    function generateLetters() {
+      for (let i = 0; i < word.length; i++) {
+        const letter = document.createElement("div");
+        letter.classList.add("letter");
+        letter.textContent = word[i];
 
-    function createHeart() {
-      if (card.style.display === "block") return;
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.textContent = "❤️";
-      heart.style.left = Math.random() * window.innerWidth + "px";
-      heart.style.top = "0px";
-      document.body.appendChild(heart);
+        // Posición aleatoria
+        letter.style.left = Math.random() * (window.innerWidth - 80) + "px";
+        letter.style.top = Math.random() * (window.innerHeight - 200) + "px";
 
-      let fall = setInterval(() => {
-        let top = parseInt(heart.style.top);
-        heart.style.top = top + 5 + "px";
-
-        const basketRect = basket.getBoundingClientRect();
-        const heartRect = heart.getBoundingClientRect();
-
-        if (
-          heartRect.bottom >= basketRect.top &&
-          heartRect.left >= basketRect.left &&
-          heartRect.right <= basketRect.right
-        ) {
-          score++;
-          heart.remove();
-          clearInterval(fall);
-          if (score >= 10) {
-            document.querySelector("h2").style.display = "none";
-            basket.style.display = "none";
-            card.style.display = "block";
-          }
-        }
-
-        if (top > window.innerHeight) {
-          heart.remove();
-          clearInterval(fall);
-        }
-      }, 30);
+        letter.addEventListener("click", () => handleClick(letter, i));
+        lettersContainer.appendChild(letter);
+      }
     }
 
-    setInterval(createHeart, 800);
+    // Control de clics correctos
+    function handleClick(letter, index) {
+      if (word[currentIndex] === letter.textContent) {
+        letter.style.background = "#d81b60";
+        letter.style.transform = "scale(1.3)";
+        setTimeout(() => letter.remove(), 300);
+        currentIndex++;
+
+        if (currentIndex === word.length) {
+          showHearts();
+          setTimeout(() => {
+            document.querySelector("h2").style.display = "none";
+            lettersContainer.style.display = "none";
+            card.style.display = "block";
+          }, 1500);
+        }
+      } else {
+        letter.style.background = "#ccc";
+        setTimeout(() => letter.style.background = "#f8bbd0", 400);
+      }
+    }
+
+    // Animación de corazones flotando al ganar
+    function showHearts() {
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.textContent = "💖";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = Math.random() * window.innerHeight + "px";
+        heart.style.fontSize = Math.random() * 30 + 10 + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+      }
+    }
+
+    generateLetters();
   </script>
+
 </body>
 </html>
