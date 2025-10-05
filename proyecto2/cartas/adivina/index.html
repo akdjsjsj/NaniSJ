@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adivina la palabra 💖</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #ffe6ec, #ffc1cc);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    height: 100vh;
+    margin: 0;
+    padding-top: 40px;
+    color: #d63384;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  h1 { margin-bottom: 5px; }
+
+  #hint {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #b83274;
+  }
+
+  #game {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+  }
+
+  #word {
+    font-size: 2rem;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+  }
+
+  .letters {
+    display: grid;
+    grid-template-columns: repeat(7, 40px);
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  button {
+    background-color: #f8a1c4;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover { background-color: #ec6f9d; }
+
+  #message {
+    margin-top: 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+
+  #stickman {
+    position: relative;
+    width: 150px;
+    height: 200px;
+    border: 2px solid #ff8fb2;
+    border-radius: 10px;
+    background: #fef6f8;
+    overflow: hidden;
+  }
+
+  .man {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 28px;
+  }
+
+  .water {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 160, 255, 0.4);
+    height: 0%;
+    transition: height 0.5s ease;
+  }
+
+  #lockScreen {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 180, 200, 0.95);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #a10054;
+  }
+
+  #lockScreen input {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ff6fa8;
+    border-radius: 8px;
+    text-align: center;
+    outline: none;
+  }
+
+  #card {
+    display: none;
+    background-color: #fff0f6;
+    border: 3px solid #f8bbd0;
+    padding: 20px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    text-align: left;
+    line-height: 1.6;
+    margin-top: 30px;
+    animation: fadeIn 1.2s ease forwards;
+    z-index: 10;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Corazones flotantes */
+  .heart {
+    position: fixed;
+    font-size: 18px;
+    color: rgba(255, 105, 180, 0.8);
+    animation: float 5s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+  }
+
+  /* Confeti */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #ff4da6;
+    animation: fall 2s linear forwards;
+    z-index: 1000;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  audio { display: none; }
+</style>
+</head>
+<body>
+
+<h1>💞 Adivina la palabra 💞</h1>
+<p id="hint">Pista: la razón por la que nos conocimos 💌</p>
+
+<div id="game">
+  <div>
+    <div id="word">_ _ _ _ _ _ _ _ _ _ _</div>
+    <div id="letters" class="letters"></div>
+    <div id="message"></div>
+  </div>
+  <div id="stickman">
+    <div class="man">🙍‍♂️</div>
+    <div class="water" id="water"></div>
+  </div>
+</div>
+
+<div id="lockScreen">
+  <h2>🔒 Has fallado 8 veces 😢</h2>
+  <p>Para seguir, ingresa la contraseña secreta:</p>
+  <p>Tienes pistas de la contraseña en otras sesiones</p>
+  <input type="password" id="unlockInput" placeholder="Contraseña">
+  <button onclick="checkPassword()">Desbloquear</button>
+  <p id="lockMsg"></p>
+</div>
+
+<div id="card">
+  <h3>💌 Lo que siento 💌</h3>
+  <p>
+    A veces no sé cómo explicarlo, pero desde el momento en que te conocí algo cambió dentro de mí.
+    Eres la razón por la que sonrío, por la que cada día tiene sentido.
+    No solo eres parte de mi vida, eres mi vida entera, no miento al decir que 
+    a tu lado lo quiero todo, en ti encontre mi felicidad, mi paz y mi mundo entero, tienes
+    todos lo que algun dia soñe, contigo soy el mas feliz del mundo y quiero estar a tu lado
+    hasta que me lo permitas, TE AMOOOOOOOOOO 🥰
+  </p>
+</div>
+
+<!-- 🎶 Música romántica -->
+<audio id="romanticMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9a9c6b3b22.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const secret = "boingdemango";
+  let guessed = Array(secret.length).fill("_");
+  let attempts = 0;
+  const wordDisplay = document.getElementById("word");
+  const message = document.getElementById("message");
+  const water = document.getElementById("water");
+  const lockScreen = document.getElementById("lockScreen");
+  const card = document.getElementById("card");
+  const music = document.getElementById("romanticMusic");
+
+  const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  const lettersContainer = document.getElementById("letters");
+  for (let letter of alphabet) {
+    const btn = document.createElement("button");
+    btn.textContent = letter;
+    btn.onclick = () => guessLetter(letter.toLowerCase(), btn);
+    lettersContainer.appendChild(btn);
+  }
+
+  function guessLetter(letter, btn) {
+    btn.disabled = true;
+    if (secret.includes(letter)) {
+      for (let i = 0; i < secret.length; i++) {
+        if (secret[i] === letter) guessed[i] = letter;
+      }
+      wordDisplay.textContent = guessed.join(" ");
+      if (!guessed.includes("_")) winGame();
+    } else {
+      attempts++;
+      updateWater();
+      if (attempts >= 8) lockOut();
+    }
+  }
+
+  function updateWater() {
+    let height = (attempts / 8) * 100;
+    water.style.height = height + "%";
+  }
+
+  function lockOut() {
+    document.getElementById("game").style.display = "none";
+    lockScreen.style.display = "flex";
+  }
+
+  function checkPassword() {
+    const input = document.getElementById("unlockInput").value;
+    if (input === "2217") {
+      lockScreen.style.display = "none";
+      document.getElementById("game").style.display = "flex";
+      attempts = 0;
+      updateWater();
+      resetLetters();
+      guessed = Array(secret.length).fill("_");
+      wordDisplay.textContent = guessed.join(" ");
+      document.getElementById("lockMsg").textContent = "";
+    } else {
+      document.getElementById("lockMsg").textContent = "❌ Contraseña incorrecta";
+    }
+  }
+
+  function resetLetters() {
+    lettersContainer.innerHTML = "";
+    for (let letter of alphabet) {
+      const btn = document.createElement("button");
+      btn.textContent = letter;
+      btn.onclick = () => guessLetter(letter.toLowerCase(), btn);
+      lettersContainer.appendChild(btn);
+    }
+  }
+
+  function winGame() {
+    message.textContent = "💘 ¡Lo lograste, amor mío! 💘";
+    document.getElementById("letters").style.display = "none";
+    document.getElementById("stickman").style.display = "none";
+    createHearts();
+    launchConfetti();
+    fadeInMusic();
+    setTimeout(() => card.style.display = "block", 1500);
+  }
+
+  // 💖 corazones flotantes
+  function createHearts() {
+    for (let i = 0; i < 40; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.textContent = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+  }
+
+  // 🎊 confeti
+  function launchConfetti() {
+    for (let i = 0; i < 80; i++) {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.top = Math.random() * 10 + "vh";
+      confetti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      confetti.style.animationDuration = (Math.random() * 2 + 1.5) + "s";
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 2000);
+    }
+  }
+
+  // 🎵 música
+  function fadeInMusic() {
+    music.volume = 0;
+    music.play();
+    let vol = 0;
+    const fade = setInterval(() => {
+      if (vol < 0.3) {
+        vol += 0.02;
+        music.volume = vol;
+      } else {
+        clearInterval(fade);
+      }
+    }, 200);
+  }
+
+  wordDisplay.textContent = guessed.join(" ");
+</script>
+
+</body>
+</html>
